@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -26,12 +28,20 @@ public class SeleniumProjectTest {
 		driver.findElement(By.xpath("//input[@id='userPassword']")).sendKeys("Soumya123");
 		driver.findElement(By.cssSelector("#login")).click();
 		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));		
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".mb-3")));
+	    
 		List <WebElement> ls = driver.findElements(By.cssSelector(".mb-3"));
-		
 		WebElement product= ls.stream().filter(products-> 
 		products.findElement(By.cssSelector("b")).getText().equals("IPHONE 13 PRO")).findFirst().orElse(null);
 		
-		product.findElement(By.cssSelector(".card-body button:last-of-type")).click();              
+		product.findElement(By.cssSelector(".card-body button:last-of-type")).click();     
+	    
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#toast-container")));
+		wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(".ng-animating"))));
+		
+		driver.findElement(By.cssSelector("[routerlink*=cart]")).click();
+
 		
 	
 		
